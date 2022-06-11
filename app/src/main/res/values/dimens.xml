@@ -1,0 +1,17 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="spacing_tiny">4dp</dimen>
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_normal">16dp</dimen>
+
+
+    <dimen name="font_normal">16sp</dimen>
+    <dimen name="font_medium">20sp</dimen>
+
+    <!--app specific-->
+    <dimen name="height_movie_poster">200dp</dimen>
+    <dimen name="width_movie_poster">120dp</dimen>
+    <dimen name="loading_size">24dp</dimen>
+    <dimen name="lottie_view_size">200dp</dimen>
+</resources>

@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">screen_capture</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="home_fragment_label">Home</string>
+    <string name="home_detail_fragment_label">Detail</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="desc_screenshot">desc_screenshot</string>
+
+    <string name="gmail_error_message">There was no application that support this action</string>
+    <string name="action_send">Send to Gmail</string>
+    <string name="action_share">Share</string>
+</resources>
