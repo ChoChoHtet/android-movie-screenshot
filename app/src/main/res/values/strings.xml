@@ -14,4 +14,5 @@
     <string name="gmail_error_message">There was no application that support this action</string>
     <string name="action_send">Send to Gmail</string>
     <string name="action_share">Share</string>
+    <string name="action_retry">Retry</string>
 </resources>

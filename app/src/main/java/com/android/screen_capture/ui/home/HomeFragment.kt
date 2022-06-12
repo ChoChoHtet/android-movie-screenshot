@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,8 +12,8 @@ import com.android.screen_capture.databinding.FragmentHomeBinding
 import com.android.screen_capture.extensions.gone
 import com.android.screen_capture.extensions.visible
 import com.android.screen_capture.ui.adapter.HomeAdapter
-import com.android.screen_capture.ui.detail.HomeDetailFragmentDirections
 import com.android.screen_capture.utils.EndlessRecyclerOnScrollListener
+import com.android.screen_capture.utils.NetworkUtil
 import com.android.screen_capture.utils.Results
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.CoroutineScope
@@ -25,7 +24,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class HomeFragment :DaggerFragment() , HomeAdapter.ItemClickListener {
+class HomeFragment : DaggerFragment(), HomeAdapter.ItemClickListener {
 
     private var _binding: FragmentHomeBinding? = null
 
@@ -60,26 +59,41 @@ class HomeFragment :DaggerFragment() , HomeAdapter.ItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAdapter()
-        homeViewModel.getMovies(1)
+        getMovies()
+
+        binding.btRetry.setOnClickListener {
+            getMovies()
+        }
         observeResponse()
 
-
     }
-    private fun initAdapter(){
+
+    private fun getMovies() {
+        if (NetworkUtil.checkForInternet(requireContext())) {
+            homeViewModel.getMovies(1)
+        }else{
+           showErrorView()
+        }
+    }
+
+    private fun initAdapter() {
         val linearLayoutManager = LinearLayoutManager(requireContext())
 
         binding.rvMovies.apply {
             layoutManager = linearLayoutManager
             adapter = homeAdapter
-            this.addOnScrollListener(object :EndlessRecyclerOnScrollListener(linearLayoutManager){
+            this.addOnScrollListener(object : EndlessRecyclerOnScrollListener(linearLayoutManager) {
                 override fun onLoadMore(page: Int, totalItemsCount: Int) {
-                    Log.d("pagination","page: $page , total: ${homeViewModel.movieTotal} , count:${homeAdapter.movieItemCount}")
-                    if (homeAdapter.movieItemCount < homeViewModel.movieTotal){
+                    Log.d(
+                        "pagination",
+                        "page: $page , total: ${homeViewModel.movieTotal} , count:${homeAdapter.movieItemCount}"
+                    )
+                    if (homeAdapter.movieItemCount < homeViewModel.movieTotal) {
                         binding.pgLoading.visible()
                         //added delay time coz api was too fast
                         CoroutineScope(Dispatchers.IO).launch {
                             delay(TimeUnit.SECONDS.toMillis(2))
-                            homeViewModel.getMovies(page+1)
+                            homeViewModel.getMovies(page + 1)
                         }
 
                     }
@@ -90,42 +104,48 @@ class HomeFragment :DaggerFragment() , HomeAdapter.ItemClickListener {
     }
 
     private fun observeResponse() {
-        homeViewModel.observeMovieList.observe(viewLifecycleOwner){result->
+        homeViewModel.observeMovieList.observe(viewLifecycleOwner) { result ->
             binding.pgLoading.gone()
-            when(result){
-                is Results.Loading ->{
-                    Log.d("_movie","show Loading")
+            when (result) {
+                is Results.Loading -> {
+                    Log.d("_movie", "show Loading")
                     showLoading()
 
                 }
-                is Results.Success ->{
+                is Results.Success -> {
                     //Log.d("_movie","movie list: ${Gson().toJson(result.data)}")
-                    Log.d("_movie","show data")
+                    Log.d("_movie", "show data")
                     hideLoading()
                     homeAdapter.addMovies(result.data)
                 }
-                else ->{
-                    Log.d("_movie","movie list error: ${(result as Results.Error).exception}")
+                else -> {
+                    Log.d("_movie", "movie list error: ${(result as Results.Error).exception}")
                     showErrorView()
                 }
             }
         }
     }
-    private fun showErrorView(){
+
+    private fun showErrorView() {
         binding.llMovies.gone()
         binding.errorView.visible()
         binding.errorView.setAnimation("network_error.json")
         binding.errorView.playAnimation()
+        binding.btRetry.visible()
     }
-    private fun showLoading(){
+
+    private fun showLoading() {
         binding.errorView.visible()
         binding.errorView.setAnimation("loading.json")
         binding.errorView.playAnimation()
+        binding.btRetry.gone()
         binding.llMovies.gone()
     }
-    private fun hideLoading(){
+
+    private fun hideLoading() {
         binding.llMovies.visible()
         binding.errorView.gone()
+        binding.btRetry.gone()
     }
 
 
@@ -135,7 +155,7 @@ class HomeFragment :DaggerFragment() , HomeAdapter.ItemClickListener {
     }
 
     override fun onItemClick(id: String) {
-       Log.d("onItemClick","id: $id")
+        Log.d("onItemClick", "id: $id")
         val action = HomeFragmentDirections.actionHomeToDetail()
         action.imdbId = id
         findNavController().navigate(action)

@@ -46,6 +46,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible" />
+        <Button
+            android:id="@+id/bt_detail_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_retry"
+            app:layout_constraintEnd_toEndOf="@+id/error_view"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="@+id/error_view"
+            app:layout_constraintTop_toBottomOf="@+id/error_view" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -11,6 +11,7 @@ import androidx.navigation.fragment.navArgs
 import com.android.screen_capture.databinding.FragmentHomeDetailBinding
 import com.android.screen_capture.extensions.gone
 import com.android.screen_capture.extensions.visible
+import com.android.screen_capture.utils.NetworkUtil
 import com.android.screen_capture.utils.Results
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -25,13 +26,13 @@ class HomeDetailFragment : DaggerFragment() {
     private lateinit var viewModel: HomeDetailViewModel
 
     @Inject
-    lateinit var viewModelFactory:ViewModelProvider.Factory
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val args:HomeDetailFragmentArgs by navArgs()
+    private val args: HomeDetailFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this,viewModelFactory)[HomeDetailViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[HomeDetailViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -46,49 +47,65 @@ class HomeDetailFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (!args.imdbId.isNullOrEmpty()){
-            viewModel.getMovieByID(args.imdbId.orEmpty())
+        getMovieDetail()
+        binding.btDetailRetry.setOnClickListener {
+            getMovieDetail()
         }
         observeResponse()
-
     }
+
+    private fun getMovieDetail() {
+        if (NetworkUtil.checkForInternet(requireContext())) {
+            if (!args.imdbId.isNullOrEmpty()) {
+                viewModel.getMovieByID(args.imdbId.orEmpty())
+            }
+        } else {
+            showErrorView()
+        }
+    }
+
     private fun observeResponse() {
-        viewModel.observeMovie.observe(viewLifecycleOwner){result->
-            when(result){
-                is Results.Loading ->{
-                    Log.d("_movie","show Loading")
+        viewModel.observeMovie.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Results.Loading -> {
+                    Log.d("_movie", "show Loading")
                     showLoading()
 
                 }
-                is Results.Success ->{
-                    Log.d("_movie","show data")
+                is Results.Success -> {
+                    Log.d("_movie", "show data")
                     hideLoading()
                     binding.movieDetail = result.data
                     binding.executePendingBindings()
                 }
-                else ->{
-                    Log.d("_movie","movie list error: ${(result as Results.Error).exception}")
+                else -> {
+                    Log.d("_movie", "movie list error: ${(result as Results.Error).exception}")
                     showErrorView()
                 }
             }
         }
     }
 
-    private fun showErrorView(){
+    private fun showErrorView() {
         binding.gpMovieDetail.gone()
         binding.errorView.visible()
         binding.errorView.setAnimation("network_error.json")
         binding.errorView.playAnimation()
+        binding.btDetailRetry.visible()
     }
-    private fun showLoading(){
+
+    private fun showLoading() {
         binding.errorView.visible()
         binding.errorView.setAnimation("loading.json")
         binding.errorView.playAnimation()
+        binding.btDetailRetry.gone()
         binding.gpMovieDetail.gone()
     }
-    private fun hideLoading(){
+
+    private fun hideLoading() {
         binding.gpMovieDetail.visible()
         binding.errorView.gone()
+        binding.btDetailRetry.gone()
     }
 
     override fun onDestroyView() {
