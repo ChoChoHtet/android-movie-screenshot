@@ -13,7 +13,7 @@
       "attributes": [],
       "versionCode": 1,
       "versionName": "1-dev",
-      "outputFile": "../../release/1-release/release"
+      "outputFile": "app-dev-release.apk"
     }
   ],
   "elementType": "File"
