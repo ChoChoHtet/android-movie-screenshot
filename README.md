@@ -1,4 +1,5 @@
 # android-movie-screenshot
+### This app is using MVVM pattern and omdp api for movies .
 # Support lib
 >[dagger](https://dagger.dev/) - dependency injection <br />
 [navigation](https://developer.android.com/guide/navigation/navigation-getting-started) - navigaton component<br />
