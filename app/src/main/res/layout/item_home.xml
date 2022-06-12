@@ -5,7 +5,7 @@
             name="movie"
             type="com.android.screen_capture.model.Movie" />
     </data>
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -15,8 +15,8 @@
         android:layout_marginEnd="@dimen/spacing_normal"
         android:layout_marginTop="@dimen/spacing_small"
         android:layout_marginBottom="@dimen/spacing_small"
-        app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="8dp"
+        app:cardBackgroundColor="#F6F1F1"
+        app:shapeAppearance="@style/CardViewShape"
         >
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -33,10 +33,12 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/iv_poster"
                     posterUrl='@{movie.poster}'
-                    android:scaleType="centerCrop"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerInside"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    tools:srcCompat="@drawable/ic_100tb" />
+                    tools:src="@drawable/ic_screenshot"
+                     />
             </FrameLayout>
 
             <TextView
@@ -80,5 +82,5 @@
                 tools:text="Movie Title" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </layout>

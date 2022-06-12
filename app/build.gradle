@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
@@ -15,8 +17,17 @@ android {
         targetSdk 32
         versionCode 1
         versionName "1.0"
-
+        signingConfig signingConfigs.debug
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('movie_app.jks')
+            storePassword 'movieapp123'
+            keyAlias 'movieapp'
+            keyPassword 'movieapp123'
+        }
     }
 
     buildTypes {
@@ -29,10 +40,12 @@ android {
             debuggable false
             shrinkResources true
             minifyEnabled true
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
+
+        compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -51,14 +64,7 @@ android {
         viewBinding true
         dataBinding true
     }
-    signingConfigs {
-        release {
-            storeFile file("keystore_glay.jks")
-            storePassword System.getenv("KSTOREPWD")
-            keyAlias "hivelocity"
-            keyPassword System.getenv("KEYPWD")
-        }
-    }
+
     flavorDimensions "version"
     productFlavors {
         dev {
@@ -79,6 +85,7 @@ android {
         }
 
     }
+
 }
 
 dependencies {
@@ -139,11 +146,13 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso_version"
     implementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
     androidTestImplementation "androidx.arch.core:core-testing:$arch_test_version"
-    //androidTestImplementation 'com.github.tmurakami:dexopener:2.0.5'
+
 
     androidTestImplementation "org.mockito:mockito-core:3.4.6"
     androidTestImplementation 'com.linkedin.dexmaker:dexmaker-mockito:2.28.1'
     androidTestImplementation "androidx.navigation:navigation-testing:2.4.2"
     androidTestImplementation 'androidx.test:rules:1.4.0'
     androidTestImplementation 'androidx.test:runner:1.4.0'
+    testImplementation "org.hamcrest:hamcrest-all:1.3"
+
 }

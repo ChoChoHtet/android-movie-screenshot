@@ -1,12 +1,13 @@
 package com.android.screen_capture.ui.adapter
 
-import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageView
+import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.android.screen_capture.R
 import com.android.screen_capture.databinding.ItemHomeBinding
 import com.android.screen_capture.model.Movie
 
@@ -33,7 +34,7 @@ class HomeAdapter(
                 movie = data
                 executePendingBindings()
                 itemView.setOnClickListener {
-                   itemClickListener.onItemClick(data.id.orEmpty())
+                    itemClickListener.onItemClick(data.id.orEmpty())
                 }
 
             }
@@ -54,22 +55,39 @@ class HomeAdapter(
         return movieList.size
     }
 
-    interface ItemClickListener{
-        fun onItemClick(id:String)
+    interface ItemClickListener {
+        fun onItemClick(id: String)
     }
 
 
 }
 
 @BindingAdapter("posterUrl")
-fun setPosterImage(imageView: AppCompatImageView, url: String?) {
+fun setPosterImage(imageView: ImageView, url: String?) {
     if (!url.isNullOrEmpty()) {
+       //https://img.i-scmp.com/cdn-cgi/image/fit=contain,width=425,format=auto/sites/default/files/styles/768x768/public/images/methode/2018/07/26/bf01d32e-8fcd-11e8-ad1d-4615aa6bc452_1280x720_204951.jpg?itok=lSmaQVob
         imageView.load(url) {
             crossfade(true)
             allowHardware(false)
-            crossfade(500)
-            // placeholder(R.drawable.ic_launcher_background)
+            placeholder(R.drawable.ic_screenshot)
+            listener(
+               onError = {_,errorResult ->
+                   run {
+                       Log.d("coil_error","url:$url")
+                       Log.e("coil_error", " ${errorResult.throwable.localizedMessage}")
+                   }
+               }
+            )
+        }
+    } else {
+        imageView.load(R.drawable.ic_movie) {
+            size(150,200)
+            crossfade(false)
+            allowHardware(false)
         }
     }
 
 }
+
+
+
