@@ -19,4 +19,11 @@ interface MovieService {
        @Query("i")id:String,
        @Query("apikey") apiKey:String
    ):Response<MovieDetail>
+
+    @GET(".")
+    suspend fun getMovieList(
+        @Query("s")title:String,
+        @Query("page") page:Int,
+        @Query("apikey") apiKey:String
+    ):MovieResponse
 }

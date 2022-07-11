@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.screen_capture.databinding.FragmentHomeBinding
 import com.android.screen_capture.extensions.gone
 import com.android.screen_capture.extensions.visible
 import com.android.screen_capture.ui.adapter.HomeAdapter
+import com.android.screen_capture.ui.adapter.MovieAdapter
 import com.android.screen_capture.utils.EndlessRecyclerOnScrollListener
 import com.android.screen_capture.utils.NetworkUtil
 import com.android.screen_capture.utils.Results
@@ -19,6 +21,7 @@ import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -40,6 +43,10 @@ class HomeFragment : DaggerFragment(), HomeAdapter.ItemClickListener {
         HomeAdapter(this)
     }
 
+    private val movieAdapter by lazy {
+        MovieAdapter(this)
+    }
+
     private lateinit var homeViewModel: HomeViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,10 +66,15 @@ class HomeFragment : DaggerFragment(), HomeAdapter.ItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAdapter()
-        getMovies()
+       // getMovies()
 
         binding.btRetry.setOnClickListener {
             getMovies()
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.movieFlow.collectLatest {
+                movieAdapter.submitData(it)
+            }
         }
         observeResponse()
 
@@ -81,8 +93,9 @@ class HomeFragment : DaggerFragment(), HomeAdapter.ItemClickListener {
 
         binding.rvMovies.apply {
             layoutManager = linearLayoutManager
-            adapter = homeAdapter
-            this.addOnScrollListener(object : EndlessRecyclerOnScrollListener(linearLayoutManager) {
+           // adapter = homeAdapter
+            adapter = movieAdapter
+            /*this.addOnScrollListener(object : EndlessRecyclerOnScrollListener(linearLayoutManager) {
                 override fun onLoadMore(page: Int, totalItemsCount: Int) {
                     Log.d(
                         "pagination",
@@ -98,8 +111,7 @@ class HomeFragment : DaggerFragment(), HomeAdapter.ItemClickListener {
 
                     }
                 }
-
-            })
+            })*/
         }
     }
 

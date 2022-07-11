@@ -1,11 +1,11 @@
 package com.android.screen_capture.ui.home
 
-import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.android.screen_capture.model.Movie
 import com.android.screen_capture.repository.MovieRepository
 import com.android.screen_capture.utils.Results
@@ -16,6 +16,7 @@ class HomeViewModel @Inject constructor(
     private val movieRepository: MovieRepository
 ) : ViewModel() {
     private val _movieList = MutableLiveData<Results<List<Movie>>>()
+
 
     val observeMovieList: LiveData<Results<List<Movie>>>
         get() = _movieList
@@ -34,7 +35,7 @@ class HomeViewModel @Inject constructor(
                 when (result) {
                     is Results.Success -> {
                         _moviesTotal.set(result.data.totalResults)
-                        _movieList.value = Results.Success(result.data.movies)
+                        _movieList.value = Results.Success(result.data.movies.orEmpty())
                     }
                     is Results.Error -> _movieList.value = Results.Error(result.exception)
                     else -> _movieList.value = Results.Error("General Error")
@@ -42,4 +43,7 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    val movieFlow = movieRepository.getMovieList().cachedIn(viewModelScope)
+
 }

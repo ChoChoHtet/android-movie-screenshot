@@ -7,7 +7,7 @@ data class MovieResponse(
     val response:Boolean,
 
     @SerializedName("Search")
-    val movies: List<Movie>,
+    val movies: List<Movie>?,
 
 
     val totalResults:Int
