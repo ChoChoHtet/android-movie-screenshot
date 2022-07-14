@@ -5,21 +5,42 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      #1
       - uses: actions/checkout@v3
 
+      #2
       - name: set up JDK 11
         uses: actions/setup-java@v1
         with:
           java-version: 11
 
-      - name: Build Project
-        run: ./gradlew assembleDevDebug
+      #3
+      - name: Generate APK
+        run: ./gradlew assembleDevRelease
 
-      - name: Upload all output
-        if: failure()
-        uses: actions/upload-artifact@v2
+      #4
+      - name: Sign APK
+        uses: r0adkll/sign-android-release@v1
+        id: sign_app
         with:
-          name: outputs
-          path: app/build/outputs/
+          releaseDirectory: app/dev/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      #5 upload signed apk
+      - uses: actions/upload-artifact@master
+        with:
+            name: app-dev-release.apk
+            path: ${{steps.sign_app.outputs.signedReleaseFile}}
+
+      #6
+      - uses: actions/upload-artifact@master
+        with:
+            name: mapping.txt
+            path: app/build/outputs/mapping/devRelease/mapping.txt
+
+
 
 
