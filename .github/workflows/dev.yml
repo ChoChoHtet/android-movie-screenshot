@@ -44,6 +44,26 @@ jobs:
             name: mapping.txt
             path: app/build/outputs/mapping/devRelease/mapping.txt
 
+      #7
+  deploy-firebase:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: app-dev-release.apk
+
+      - name: upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          token: ${{secrets.FIREBASE_TOKEN}}
+          groups: Dev Tester
+          file: app-release-unsigned-signed.apk
+
+
+
+
 
 
 
