@@ -13,6 +13,17 @@ jobs:
       - name: run unit test
         run: ./gradlew test
 
+  android-test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: run instrument test
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 28
+          script: ./gradlew connectedCheck
+
 
   build:
     runs-on: ubuntu-latest
