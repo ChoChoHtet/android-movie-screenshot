@@ -52,4 +52,4 @@ jobs:
           appId: ${{secrets.FIREBASE_PROD_APP_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
           groups: prod-tester
-          file: app-prod-release-signed.aab
+          file: app-prod-release.aab
