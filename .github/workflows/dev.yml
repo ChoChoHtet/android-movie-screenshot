@@ -59,7 +59,7 @@ jobs:
           appId: ${{secrets.FIREBASE_APP_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
           groups: Dev Tester
-          file: app/dev/release/app-dev-release.apk
+          file: app-dev-release-signed.apk
 
 
 
