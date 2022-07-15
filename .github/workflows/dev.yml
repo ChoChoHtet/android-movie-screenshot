@@ -45,7 +45,7 @@ jobs:
             path: app/build/outputs/mapping/devRelease/mapping.txt
 
       #7
-  deploy-firebase:
+  deploy-firebase-distribution:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
@@ -59,7 +59,7 @@ jobs:
           appId: ${{secrets.FIREBASE_APP_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
           groups: Dev Tester
-          file: app-release-unsigned-signed.apk
+          file: app-dev-release.apk
 
 
 
