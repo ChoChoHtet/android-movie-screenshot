@@ -1,0 +1,39 @@
+name: Prod CI
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Generate Bundle
+        run: ./gradlew bundleProdRelease
+
+      - name: Sign Bundle
+        uses: r0adkll/sign-android-release@v1
+        id: sign_app
+        with:
+            releaseDirectory: app/build/outputs/bundle/ProdRelease
+            signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+            alias: ${{ secrets.ALIAS }}
+            keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+            keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload to artifact
+        uses: actions/upload-artifact@master
+        with:
+            name: app-prod-release.aab
+            path: ${{steps.sign_app.outputs.signedReleaseFile}}
+
+      - name: Generate mapping file
+        uses: actions/upload-artifact@master
+        with:
+            name: mapping.txt
+            path: app/build/outputs/mapping/prodRelease/mapping.txt
