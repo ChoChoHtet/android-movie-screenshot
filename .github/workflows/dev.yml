@@ -5,6 +5,14 @@ on:
     tags:
       - 'v*'
 jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: run unit test
+        run: ./graldew test
+
+
   build:
     runs-on: ubuntu-latest
     steps:
