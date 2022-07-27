@@ -1,11 +1,10 @@
-import com.android.build.gradle.internal.api.BaseVariantOutputImpl
-
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'androidx.navigation.safeargs'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -131,6 +130,10 @@ dependencies {
 
     //lottie
     implementation "com.airbnb.android:lottie:$lottie_version"
+
+    //hilt
+    implementation "com.google.dagger:hilt-android:2.38.1"
+    kapt "com.google.dagger:hilt-compiler:2.38.1"
 
     //unit testing
     //mockk
