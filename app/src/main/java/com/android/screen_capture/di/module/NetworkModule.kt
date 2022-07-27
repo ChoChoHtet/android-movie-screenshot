@@ -2,7 +2,6 @@ package com.android.screen_capture.di.module
 
 
 import com.android.screen_capture.BuildConfig
-import com.android.screen_capture.BuildConfig.DEBUG
 import com.android.screen_capture.network.MovieService
 import dagger.Module
 import dagger.Provides
@@ -57,7 +56,7 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideMovieService(retrofit: Retrofit) = retrofit.create(MovieService::class.java)
+    fun provideMovieService(retrofit: Retrofit): MovieService = retrofit.create(MovieService::class.java)
 
 
 }

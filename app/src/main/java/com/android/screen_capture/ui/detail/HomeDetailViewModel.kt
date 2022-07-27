@@ -8,22 +8,24 @@ import com.android.screen_capture.model.Movie
 import com.android.screen_capture.model.MovieDetail
 import com.android.screen_capture.repository.MovieRepository
 import com.android.screen_capture.utils.Results
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class HomeDetailViewModel @Inject constructor(
     private val movieRepository: MovieRepository
-):ViewModel() {
+) : ViewModel() {
     private val _movie = MutableLiveData<Results<MovieDetail>>()
 
     val observeMovie: LiveData<Results<MovieDetail>>
         get() = _movie
 
-    fun getMovieByID(id:String){
+    fun getMovieByID(id: String) {
         viewModelScope.launch {
             _movie.postValue(Results.Loading)
-            movieRepository.getMovieByID(id).let {result->
-               _movie.value = result
+            movieRepository.getMovieByID(id).let { result ->
+                _movie.value = result
             }
         }
     }

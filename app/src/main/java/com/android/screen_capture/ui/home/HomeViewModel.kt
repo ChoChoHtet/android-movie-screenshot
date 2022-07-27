@@ -9,9 +9,11 @@ import androidx.lifecycle.viewModelScope
 import com.android.screen_capture.model.Movie
 import com.android.screen_capture.repository.MovieRepository
 import com.android.screen_capture.utils.Results
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class HomeViewModel @Inject constructor(
     private val movieRepository: MovieRepository
 ) : ViewModel() {

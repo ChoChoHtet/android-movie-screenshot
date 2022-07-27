@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.android.screen_capture.databinding.FragmentHomeDetailBinding
@@ -13,26 +14,27 @@ import com.android.screen_capture.extensions.gone
 import com.android.screen_capture.extensions.visible
 import com.android.screen_capture.utils.NetworkUtil
 import com.android.screen_capture.utils.Results
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
-class HomeDetailFragment : DaggerFragment() {
+@AndroidEntryPoint
+class HomeDetailFragment : Fragment() {
 
     private var _binding: FragmentHomeDetailBinding? = null
 
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: HomeDetailViewModel
+    private val viewModel: HomeDetailViewModel by viewModels()
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    /* @Inject
+     lateinit var viewModelFactory: ViewModelProvider.Factory*/
 
     private val args: HomeDetailFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this, viewModelFactory)[HomeDetailViewModel::class.java]
+        //viewModel = ViewModelProvider(this, viewModelFactory)[HomeDetailViewModel::class.java]
     }
 
     override fun onCreateView(

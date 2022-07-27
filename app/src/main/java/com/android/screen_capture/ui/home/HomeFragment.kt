@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +17,7 @@ import com.android.screen_capture.ui.adapter.HomeAdapter
 import com.android.screen_capture.utils.EndlessRecyclerOnScrollListener
 import com.android.screen_capture.utils.NetworkUtil
 import com.android.screen_capture.utils.Results
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -24,7 +26,8 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class HomeFragment : DaggerFragment(), HomeAdapter.ItemClickListener {
+@AndroidEntryPoint
+class HomeFragment : Fragment(), HomeAdapter.ItemClickListener {
 
     private var _binding: FragmentHomeBinding? = null
 
@@ -32,18 +35,19 @@ class HomeFragment : DaggerFragment(), HomeAdapter.ItemClickListener {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    @Inject
+   /* @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var homeViewModel: HomeViewModel*/
 
-
+    private  val homeViewModel: HomeViewModel by viewModels()
     private val homeAdapter by lazy {
         HomeAdapter(this)
     }
 
-    private lateinit var homeViewModel: HomeViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        homeViewModel = ViewModelProvider(this, viewModelFactory)[HomeViewModel::class.java]
+       // homeViewModel = ViewModelProvider(this, viewModelFactory)[HomeViewModel::class.java]
     }
 
     override fun onCreateView(
