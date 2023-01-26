@@ -4,16 +4,16 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.android.screen_capture.dev",
-  "variantName": "devRelease",
+  "applicationId": "com.android.screen_capture.prod",
+  "variantName": "prodRelease",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
       "versionCode": 1,
-      "versionName": "1-dev",
-      "outputFile": "app-dev-release.apk"
+      "versionName": "1-release",
+      "outputFile": "app-prod-release.apk"
     }
   ],
   "elementType": "File"
